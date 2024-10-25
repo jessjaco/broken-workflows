@@ -1,0 +1,37 @@
+kind: Workflow
+metadata:
+  name: big-search
+  namespace: argo
+spec:
+  entrypoint: workflow-entrypoint
+  podGC:
+    strategy: OnWorkflowSuccess
+    deleteDelayDuration: 600s
+  parallelism: 100
+  tolerations:
+  - key: digitalearthpacific.org/node-purpose
+    operator: Equal
+    value: argo
+    effect: NoSchedule
+  - key: kubernetes.azure.com/scalesetpriority
+    operator: Equal
+    value: spot
+    effect: NoSchedule
+  templates:
+  - name: workflow-entrypoint
+    steps:
+    - - name: repeat-search
+        template: search
+        withSequence:
+          count: "50"
+  - name: search
+    container:
+      image: "docker.io/numbersandstrings/broken-workflows:0.0.1"
+      imagePullPolicy: IfNotPresent
+      resources:
+        requests: 
+          memory: 4Gi
+          cpu: 2
+      command: [ python ]
+      args:
+        - big_search.py
