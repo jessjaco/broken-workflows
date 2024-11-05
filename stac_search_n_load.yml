@@ -1,13 +1,14 @@
 kind: Workflow
 metadata:
-  name: big-search
+  name: search-and-load
   namespace: argo
 spec:
   entrypoint: workflow-entrypoint
+  serviceAccountName: public-bucket-writer
   podGC:
     strategy: OnWorkflowSuccess
     deleteDelayDuration: 600s
-  parallelism: 250
+  parallelism: 30
   tolerations:
   - key: digitalearthpacific.org/node-purpose
     operator: Equal
@@ -19,29 +20,19 @@ spec:
     effect: NoSchedule
   templates:
   - name: workflow-entrypoint
-    retryStrategy:
-      limit: "10"
-      backoff:
-        duration: "1"    
-        factor: "2"
-        maxDuration: "1m" 
     steps:
-    - - name: repeat-search
-        template: search
+    - - name: repeat-task
+        template: task
         withSequence:
           count: "250"
-  - name: search
+  - name: task
     container:
-      image: "docker.io/numbersandstrings/broken-workflows:0.0.3"
+      image: "docker.io/numbersandstrings/broken-workflows:0.0.5"
       imagePullPolicy: IfNotPresent
       resources:
         requests: 
-          memory: 4Gi
-          cpu: 2
+          memory: 32Gi
+          cpu: 4
       command: [ python ]
       args:
-        - big_search.py
-        - --datetime
-        - "2020"
-        - --retry
-        - "no"
+        - stac_search_n_load.py

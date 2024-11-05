@@ -1,2 +1,7 @@
-pystac_client
+boto3
+botocore
+odc-geo
 odc-stac
+pystac_client
+typer
+
