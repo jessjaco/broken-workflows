@@ -18,7 +18,7 @@ spec:
           count: "250"
   - name: task
     container:
-      image: "docker.io/numbersandstrings/broken-workflows:0.0.5"
+      image: "docker.io/numbersandstrings/broken-workflows:0.0.6"
       imagePullPolicy: IfNotPresent
       resources:
         requests: 
