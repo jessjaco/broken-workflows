@@ -26,7 +26,7 @@ def main(datetime: str = DATETIME):
     median = ds.median(dim="time")
     for var in ds:
         print(var)
-        write_cog(median[var], "temp.tif")
+        write_cog(median[var], "temp.tif", overwrite=True)
 
 
 if __name__ == "__main__":

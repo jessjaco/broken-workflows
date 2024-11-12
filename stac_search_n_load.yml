@@ -9,6 +9,12 @@ spec:
     strategy: OnWorkflowSuccess
     deleteDelayDuration: 600s
   parallelism: 1
+  podMetadata:
+    labels:
+      app: broken
+    annotations:
+      karpenter.sh/do-not-disrupt: "true"
+      karpenter.sh/capacity-type: "spot"
   templates:
   - name: workflow-entrypoint
     steps:
@@ -18,12 +24,12 @@ spec:
           count: "250"
   - name: task
     container:
-      image: "docker.io/numbersandstrings/broken-workflows:0.0.6"
+      image: "docker.io/numbersandstrings/broken-workflows:0.0.7"
       imagePullPolicy: IfNotPresent
       resources:
         requests: 
-          memory: 32Gi
-          cpu: 4
+          memory: 64Gi
+          cpu: 8
       command: [ python ]
       args:
         - stac_search_n_load.py
