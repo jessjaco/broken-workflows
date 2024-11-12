@@ -8,16 +8,7 @@ spec:
   podGC:
     strategy: OnWorkflowSuccess
     deleteDelayDuration: 600s
-  parallelism: 30
-  tolerations:
-  - key: digitalearthpacific.org/node-purpose
-    operator: Equal
-    value: argo
-    effect: NoSchedule
-  - key: kubernetes.azure.com/scalesetpriority
-    operator: Equal
-    value: spot
-    effect: NoSchedule
+  parallelism: 1
   templates:
   - name: workflow-entrypoint
     steps:
